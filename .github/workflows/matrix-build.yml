@@ -1,0 +1,44 @@
+name: Matrix Build - 02fdc79
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    # --- Matrix configuration (3+ variants) ---
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Step identifier required ---
+      - name: matrix-02fdc79
+        run: echo "Building for Python version ${{ matrix.python-version }}"
+
+      # --- Checkout code (optional, useful for real repos) ---
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # --- Setup Python environment ---
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # --- Generate build artifact ---
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Python version ${{ matrix.python-version }}" > build_output.txt
+          echo "Matrix ID: 02fdc79" >> build_output.txt
+          echo "Timestamp: $(date)" >> build_output.txt
+
+      # --- Upload artifact ---
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-02fdc79-py${{ matrix.python-version }}
+          path: build_output.txt
