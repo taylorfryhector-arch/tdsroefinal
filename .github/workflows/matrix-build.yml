@@ -6,37 +6,37 @@ on:
 
 jobs:
   build:
-    # --- Matrix configuration (3+ variants) ---
-    strategy:
-      matrix:
-        python-version: ['3.9', '3.10', '3.11']
-      fail-fast: false
-
+    name: Build on Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
     steps:
-      # --- Step identifier required ---
+      # Identifier step (required)
       - name: matrix-02fdc79
         run: echo "Building for Python version ${{ matrix.python-version }}"
 
-      # --- Checkout code (optional, useful for real repos) ---
+      # Optional: Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- Setup Python environment ---
+      # Setup Python for each matrix job
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      # --- Generate build artifact ---
+      # Generate build artifact
       - name: Generate build artifact
         run: |
           echo "Build output for Python version ${{ matrix.python-version }}" > build_output.txt
           echo "Matrix ID: 02fdc79" >> build_output.txt
           echo "Timestamp: $(date)" >> build_output.txt
 
-      # --- Upload artifact ---
+      # Upload build artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
